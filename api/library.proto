@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package nokamoto.github.com.example.library;
+
+option go_package = "github.com/nokamoto/grpcweb-react-vue/api";
+
+service Library {
+  rpc CreateBook(CreateBookRequest) returns (Book);
+  rpc ListBook(ListBookRequest) returns (ListBookResponse);
+}
+
+message Book {
+  string name = 1;
+  string display_name = 2;
+}
+
+message CreateBookRequest {
+  Book book = 2;
+}
+
+message ListBookRequest {
+  string page_token = 1;
+  int32 page_size = 2;
+}
+
+message ListBookResponse {
+  repeated Book books = 1;
+  string next_page_token = 2;
+}

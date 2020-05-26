@@ -1,0 +1,9 @@
+resources:
+- server.yaml
+- react-app.yaml
+- envoy.yaml
+
+configMapGenerator:
+- name: envoy-conf
+  files:
+    - envoy-conf.yaml

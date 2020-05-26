@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+metadata:
+  name: grpcweb-react-vue
+build:
+  artifacts:
+  - image: react-app
+    context: react-app
+  - image: server
+    docker:
+      dockerfile: cmd/server/Dockerfile
+deploy:
+  kustomize:
+    paths:
+    - deployments
+portForward:
+- resourceType: deployment
+  resourceName: react-app-deployment
+  port: 5000
+  localPort: 5000
+- resourceType: deployment
+  resourceName: server-deployment
+  port: 9000
+  localPort: 9000
