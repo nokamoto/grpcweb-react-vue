@@ -6,6 +6,9 @@ build-api:
 	docker run -v $(PWD):/work -w /work -it --rm local/protoc protoc -I=. api/*.proto \
 		--js_out=import_style=commonjs,binary:react-app/src/library \
 		--grpc-web_out=import_style=typescript,mode=grpcwebtext:react-app/src/library
+	docker run -v $(PWD):/work -w /work -it --rm local/protoc protoc -I=. api/*.proto \
+		--js_out=import_style=commonjs,binary:vue-app/src/library \
+		--grpc-web_out=import_style=typescript,mode=grpcwebtext:vue-app/src/library
 
 start-react-app:
 	# docker run -v $(PWD)/react-app:/app -w /app --rm -it -t node:12.16.3-alpine3.11 yarn add react-router react-router-dom @types/react-router @types/react-router-dom
@@ -17,6 +20,16 @@ react-app:
 	docker run -v $(PWD):/app -w /app --rm -it -t node:12.16.3-alpine3.11 npx create-react-app react-app --typescript
 	mkdir -p react-app/src/library
 
+start-vue-app:
+	# docker run -v $(PWD)/vue-app:/app -w /app --rm -it -t node:12.16.3-alpine3.11 yarn add @types/google-protobuf google-protobuf
+	# docker run -v $(PWD)/vue-app:/app -w /app --rm -it -t node:12.16.3-alpine3.11 yarn add grpc-web@1.0.7 --exact
+	docker run -v $(PWD)/vue-app:/app -w /app -p 8080:8080 --rm -it -t node:12.16.3-alpine3.11 yarn serve
+
+vue-app:
+	docker build -t local/vue -f scripts/vue/Dockerfile scripts/vue
+	docker run -v $(PWD):/app -w /app --rm -it -t local/vue vue create vue-app
+
 build:
+	docker run -v $(PWD)/vue-app:/app -w /app --rm -it -t node:12.16.3-alpine3.11 yarn build
 	docker run -v $(PWD)/react-app:/app -w /app --rm -it -t node:12.16.3-alpine3.11 npm run build
 	skaffold dev --port-forward

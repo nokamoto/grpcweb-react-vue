@@ -1,6 +1,7 @@
 resources:
 - server.yaml
 - react-app.yaml
+- vue-app.yaml
 - envoy.yaml
 
 configMapGenerator:
